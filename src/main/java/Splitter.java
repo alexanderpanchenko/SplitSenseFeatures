@@ -98,7 +98,7 @@ public class Splitter {
             String line = inputReader.readLine().trim();
             if (line.isEmpty()) continue;
             String[] fields = line.split(COL_SEP);
-            if (fields.length != 4) {
+            if (fields.length < 3) {
                 System.out.printf("Warning: cannot parse the line with %d fields: '%s'\n", fields.length, line.substring(0, Math.min(line.length(), 100)));
                 wrongLinesNum += 1;
                 continue;
@@ -106,7 +106,8 @@ public class Splitter {
             String word = fields[0].trim();
             String senseId = fields[1].trim();
             LinkedHashMap<String,String> clusterWords = parseFeatures(fields[2]);
-            LinkedHashMap<String,String> features = parseFeatures(fields[3]);
+            LinkedHashMap<String,String> features = new LinkedHashMap<String, String>();
+            if (fields.length > 3) features = parseFeatures(fields[3]);
             LinkedHashMap<String,String> clusterAndFeatures = mergeFeatures(clusterWords, features);
 
             BufferedWriter wordWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputDirPath + "/" + word + "#n#" + senseId), ENCODING));
