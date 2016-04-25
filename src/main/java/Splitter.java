@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class Splitter {
     final static String LIST_SEP = "  ";
@@ -12,7 +15,8 @@ public class Splitter {
     final static int MAX_FEATURE_NUM = 1000;
     final static String ENCODING = "UTF-8";
 
-    static HashSet<String> stopwords = loadStopwords(stopwordsPath);
+    final static Pattern reNumbers = Pattern.compile("^[0-9\\.]+$");
+    final static HashSet<String> stopwords = loadStopwords(stopwordsPath);
 
     static HashSet<String> loadStopwords(String stopwordsPath) {
         HashSet<String> res = new HashSet<String>();
@@ -30,22 +34,23 @@ public class Splitter {
 
     static String cleanFeature(String feature){
         boolean skipFeature =
-                feature.contains("\\+") ||
-                        feature.contains("+") ||
-                        feature.contains("/") ||
-                        feature.contains("\\") ||
-                        feature.contains("$") ||
-                        feature.contains("^") ||
-                        feature.contains(".") ||
-                        feature.contains("?") ||
-                        feature.contains("(") ||
-                        feature.contains(")") ||
-                        feature.contains("[") ||
-                        feature.contains("]") ||
-                        feature.contains("{") ||
-                        feature.contains("}") ||
-                        feature.contains("|") ||
-                        feature.contains("*");
+            feature.contains("\\+") ||
+            feature.contains("+") ||
+            feature.contains("/") ||
+            feature.contains("\\") ||
+            feature.contains("$") ||
+            feature.contains("^") ||
+            feature.contains(".") ||
+            feature.contains("?") ||
+            feature.contains("(") ||
+            feature.contains(")") ||
+            feature.contains("[") ||
+            feature.contains("]") ||
+            feature.contains("{") ||
+            feature.contains("}") ||
+            feature.contains("|") ||
+            feature.contains("*") ||
+            reNumbers.matcher(feature).find();
 
         if (skipFeature) return "";
         else return feature.trim().replaceAll(" ", "_");
